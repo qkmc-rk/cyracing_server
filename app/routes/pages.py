@@ -54,13 +54,23 @@ INDEX_HTML = """<!DOCTYPE html>
     </nav>
   </header>
 
-  <main class="flex-1 flex flex-col items-center justify-center text-center px-6">
+  <main class="flex-1 flex flex-col items-center justify-center text-center px-6 py-12">
     <h2 class="text-5xl font-extrabold mb-4">
       <span class="text-white">CY</span><span class="text-red-500">Racing</span>
     </h2>
-    <p class="text-gray-400 text-lg max-w-xl mb-10">
+    <p class="text-gray-400 text-lg max-w-xl mb-8">
       Assetto Corsa 赛车数据平台 &middot; 比赛结果 &middot; 车手画像 &middot; 圈速分析
     </p>
+
+    <!-- 微信小程序扫码 -->
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8 mb-8 max-w-sm w-full">
+      <h3 class="text-lg font-semibold mb-2">扫码进入微信小程序</h3>
+      <p class="text-gray-400 text-sm mb-5">查询比赛记录、个人画像、圈速分析</p>
+      <img src="/static/miniapp.jpg" alt="微信小程序扫码"
+           class="w-48 h-48 mx-auto rounded-xl border border-gray-700" />
+      <p class="text-gray-500 text-xs mt-4">微信扫一扫上方二维码</p>
+    </div>
+
     <div class="flex gap-4">
       <a href="/mods"
          class="px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg font-semibold transition">
@@ -74,7 +84,7 @@ INDEX_HTML = """<!DOCTYPE html>
   </main>
 
   <footer class="border-t border-gray-800 py-4 text-center text-gray-600 text-xs">
-    CYRacing &copy; 2026
+    CYRacing &copy; 2026 &nbsp;|&nbsp; 蜀ICP备18006071号
   </footer>
 </body>
 </html>"""
@@ -145,13 +155,20 @@ async def mod_page():
       </table>
     </div>
 
-    <p class="mt-8 text-gray-600 text-sm">
-      将 .zip / .7z 文件放入服务器 <code class="bg-gray-800 px-1 rounded">static/mod/</code> 目录即可在此展示。
-    </p>
+    <!-- 安装说明 -->
+    <div class="mt-10 bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <h3 class="text-lg font-semibold mb-3">Mod 安装方法</h3>
+      <ol class="text-gray-400 text-sm space-y-2 list-decimal list-inside">
+        <li>下载上方压缩包文件</li>
+        <li>打开 <span class="text-white font-medium">Content Manager</span>（Assetto Corsa 内容管理器）</li>
+        <li>将压缩包<span class="text-white">直接拖入</span> Content Manager 窗口</li>
+        <li>点击右上角 <span class="text-white font-bold">三</span>（菜单按钮），即可自动安装</li>
+      </ol>
+    </div>
   </main>
 
   <footer class="border-t border-gray-800 py-4 text-center text-gray-600 text-xs">
-    CYRacing &copy; 2026
+    CYRacing &copy; 2026 &nbsp;|&nbsp; 蜀ICP备18006071号
   </footer>
 </body>
 </html>"""
