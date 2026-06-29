@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+from app.routes import pages
 from app.routes import races, events
 from app.routes import drivers
 from app.routes import users
@@ -119,6 +120,7 @@ async def shutdown():
             pass
 
 
+app.include_router(pages.router, tags=["pages"])
 app.include_router(races.router, prefix="/races", tags=["races"])
 app.include_router(events.router, prefix="/events", tags=["events"])
 app.include_router(drivers.router, prefix="/drivers", tags=["drivers"])
