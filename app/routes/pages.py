@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
@@ -7,6 +8,32 @@ router = APIRouter()
 
 STATIC_ROOT = Path(__file__).parent.parent.parent / "static"
 MOD_DIR = STATIC_ROOT / "mod"
+
+
+def _list_mod_files() -> List[dict]:
+    """扫描 static/mod/ 目录，返回文件列表。"""
+    files = []
+    if MOD_DIR.is_dir():
+        for f in sorted(MOD_DIR.iterdir()):
+            if f.is_file() and f.name not in (".gitkeep", ".gitignore"):
+                st = f.stat()
+                files.append({
+                    "name": f.name,
+                    "size_bytes": st.st_size,
+                    "size": _fmt_size(st.st_size),
+                    "url": f"/static/mod/{f.name}",
+                })
+    return files
+
+
+def _fmt_size(size_bytes: int) -> str:
+    if size_bytes >= 1_000_000_000:
+        return f"{size_bytes / 1_000_000_000:.2f} GB"
+    if size_bytes >= 1_000_000:
+        return f"{size_bytes / 1_000_000:.2f} MB"
+    if size_bytes >= 1_000:
+        return f"{size_bytes / 1_000:.2f} KB"
+    return f"{size_bytes} B"
 
 # ---------- 首页 ----------
 
@@ -60,27 +87,9 @@ async def home():
 
 # ---------- Mod 下载页 ----------
 
-def _fmt_size(size_bytes: int) -> str:
-    if size_bytes >= 1_000_000_000:
-        return f"{size_bytes / 1_000_000_000:.2f} GB"
-    if size_bytes >= 1_000_000:
-        return f"{size_bytes / 1_000_000:.2f} MB"
-    if size_bytes >= 1_000:
-        return f"{size_bytes / 1_000:.2f} KB"
-    return f"{size_bytes} B"
-
-
 @router.get("/mods", response_class=HTMLResponse)
-async def mod_list():
-    files = []
-    if MOD_DIR.is_dir():
-        for f in sorted(MOD_DIR.iterdir()):
-            if f.is_file() and f.name != ".gitkeep":
-                files.append({
-                    "name": f.name,
-                    "size": _fmt_size(f.stat().st_size),
-                    "url": f"/static/mod/{f.name}",
-                })
+async def mod_page():
+    files = _list_mod_files()
 
     rows = ""
     if files:
@@ -148,3 +157,9 @@ async def mod_list():
 </html>"""
 
     return html
+
+
+@router.get("/api/mods")
+async def mod_list_json():
+    """返回 mod 文件列表 JSON。"""
+    return _list_mod_files()
